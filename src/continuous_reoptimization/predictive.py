@@ -29,7 +29,9 @@ class PredictiveDijkstraOptimizer:
         for u, v, data in state.graph.edges(data=True):
             current_cost = float(data["cost"])
             predicted_cost = self.predictor.predict((str(u), str(v)), current_cost)
-            projected_graph.add_edge(u, v, **data, cost=predicted_cost)
+            projected_data = dict(data)
+            projected_data["cost"] = predicted_cost
+            projected_graph.add_edge(u, v, **projected_data)
 
         projected_state = OptimizationState(
             graph=projected_graph,
