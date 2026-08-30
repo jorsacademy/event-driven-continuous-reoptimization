@@ -83,7 +83,8 @@ def test_engine_with_incremental_optimizer_handles_multiple_events() -> None:
     assert first.solution == DijkstraOptimizer().solve(state)
 
     second = engine.handle(EdgeClosed(("C", "D")))
-    assert second.solution is None
+    assert second.solution is not None
+    assert second.solution == DijkstraOptimizer().solve(state)
 
     third = engine.handle(EdgeOpened(("C", "D")))
     assert third.solution is not None
