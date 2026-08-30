@@ -14,4 +14,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e '.[dev]'
-      - run: pytest tests/test_engine.py -q
+      - run: pytest tests/test_engine.py tests/test_incremental_optimizer.py -q
+      - run: mkdir -p outputs
+      - run: python -m continuous_reoptimization.benchmark --size 30 --events 250 --seed 42 --output outputs/benchmark.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reoptimization-benchmark
+          path: outputs/benchmark.json
