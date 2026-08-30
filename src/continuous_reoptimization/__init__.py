@@ -1,7 +1,7 @@
 from .engine import ReoptimizationEngine
 from .events import EdgeClosed, EdgeCostChanged, EdgeOpened, ManualReoptimize, TimerExpired
 from .model import OptimizationState, RouteSolution
-from .optimizer import DijkstraOptimizer
+from .optimizer import DijkstraOptimizer, IncrementalShortestPathOptimizer
 from .policy import TriggerPolicy
 
 __all__ = [
@@ -9,6 +9,7 @@ __all__ = [
     "EdgeClosed",
     "EdgeCostChanged",
     "EdgeOpened",
+    "IncrementalShortestPathOptimizer",
     "ManualReoptimize",
     "OptimizationState",
     "ReoptimizationEngine",
