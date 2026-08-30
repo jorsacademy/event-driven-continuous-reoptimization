@@ -1,0 +1,24 @@
+name: Reoptimization Scenario
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+jobs:
+  scenario:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e '.[dev]'
+      - run: pytest tests/test_engine.py tests/test_incremental_optimizer.py tests/test_predictive.py tests/test_predictive_benchmark.py -q
+      - run: mkdir -p outputs
+      - run: python -m continuous_reoptimization.benchmark --size 30 --events 250 --seed 42 --output outputs/benchmark.json
+      - run: python -m continuous_reoptimization.predictive_benchmark --steps 24 --output outputs/predictive_benchmark.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reoptimization-benchmarks
+          path: outputs/*.json
