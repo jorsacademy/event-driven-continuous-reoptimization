@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from .events import EdgeClosed, EdgeCostChanged, EdgeOpened, Event
 from .model import OptimizationState, RouteSolution
-from .optimizer import DijkstraOptimizer, NoFeasibleRouteError
+from .optimizer import DijkstraOptimizer, NoFeasibleRouteError, Optimizer
 from .policy import TriggerPolicy
 
 
@@ -18,7 +18,7 @@ class ReoptimizationEngine:
     def __init__(
         self,
         state: OptimizationState,
-        optimizer: DijkstraOptimizer | None = None,
+        optimizer: Optimizer | None = None,
         policy: TriggerPolicy | None = None,
     ) -> None:
         self.state = state
@@ -55,7 +55,7 @@ class ReoptimizationEngine:
             if not self.state.graph.has_edge(u, v):
                 raise KeyError(f"unknown edge: {event.edge}")
             if event.new_cost < 0:
-                raise ValueError("edge cost must be non-negative for Dijkstra")
+                raise ValueError("edge cost must be non-negative")
             self.state.graph[u][v]["cost"] = float(event.new_cost)
         elif isinstance(event, EdgeClosed):
             if not self.state.graph.has_edge(*event.edge):
